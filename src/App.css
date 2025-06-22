@@ -38,7 +38,12 @@
     animation: logo-spin infinite 20s linear;
   }
 }
-
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
 .card {
   padding: 2em;
 }
@@ -66,7 +71,10 @@
 
 .Signup,
 .Login,
-.Transfer {
+.Transfer,
+.notifications,
+.pin,
+.password {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -233,4 +241,29 @@
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+}
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgb(234, 234, 234);
+  border-radius: 8px;
+  gap: 1rem;
+  width: 600px;
+}
+.names {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.notification-item h4 {
+  font-size: 0.8rem;
+  color: #888;
+}
+.extraDetails {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }

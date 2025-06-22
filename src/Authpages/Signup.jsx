@@ -13,26 +13,26 @@ export const Signup = () => {
   const onFinish = async (values) => {
     setIsLoading(true);
     try {
-      const userRes = await mockApi.createUser(values);
-      const user = await userRes.json();
-
       const accountName = `${values.firstName} ${values.lastName}`;
       const accountNumber = String(values.phoneNumber).slice(1);
       const accountBalance = 1000;
       const pin = 1234;
 
-      await mockApi.createAccount({
+      const userRes = await mockApi.createUser({
+        ...values,
         accountName,
         accountNumber,
         accountBalance,
         pin,
-        userId: user.id,
       });
+      const user = await userRes.json();
 
       api.success({
         message: "Success",
         description: "Account Created Successfully",
       });
+      setTimeout(() => navigate("/login"), 1000);
+
       form.resetFields();
     } catch (error) {
       api.error({
@@ -137,7 +137,7 @@ export const Signup = () => {
 
         <Form.Item>
           <Space>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Create Account
             </Button>
 

@@ -11,29 +11,35 @@ import {
 } from "@ant-design/icons";
 import { mockApi } from "../api/mockapi";
 import { useNavigate } from "react-router-dom";
+import { Loading } from "../components/Loading";
 
 export const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [account, setAccount] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     if (storedUser.id) {
       mockApi.getUserById(storedUser.id).then((data) => {
         setUser(data);
-
-        mockApi.getAccountsByUserId(data.id).then((accounts) => {
-          setAccount(accounts[0]);
-        });
+        setIsLoading(false);
       });
+    } else {
+      setIsLoading(false);
     }
   }, []);
-  const accountNumber = account?.accountNumber
-    ? account.accountNumber
-    : "*********";
-  const accountBalance = account?.accountBalance
-    ? account.accountBalance
-    : "0.00";
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Loading />;
+      </div>
+    );
+  }
+
+  const accountNumber = user?.accountNumber ? user.accountNumber : "*********";
+  const accountBalance = user?.accountBalance ? user.accountBalance : "0.00";
   return (
     <div className="dashboard">
       <div className="account-summary">
@@ -48,7 +54,10 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="transaction-history">
+      <div
+        className="transaction-history"
+        onClick={() => navigate("/notifications")}
+      >
         Transaction History <CaretRightOutlined />
       </div>
       <br />

@@ -26,10 +26,12 @@ export const mockApi = {
     });
   },
   getAccountsByUserId: (userId) => {
-    return fetch(`${BASE_URL}/Account?id=${userId}`).then((res) => res.json());
+    return fetch(`${BASE_URL}/UserDetails?id=${userId}`).then((res) =>
+      res.json()
+    );
   },
   updateAccount: (account) => {
-    return fetch(`${BASE_URL}/Account/${account.id}`, {
+    return fetch(`${BASE_URL}/UserDetails/${account.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -37,14 +39,25 @@ export const mockApi = {
       body: JSON.stringify(account),
     });
   },
+  getAllAccounts: () =>
+    fetch(`${BASE_URL}/UserDetails`).then((res) => res.json()),
 
   createTransfer: async (data) => {
-    const res = await fetch(`${BASE_URL}/transfers`, {
+    const res = await fetch(`${BASE_URL}/TransactionDetails`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     return res.json();
   },
-  getAllAccounts: () => fetch(`${BASE_URL}/Account`).then((res) => res.json()),
+  getTransfers: () => {
+    return fetch(`${BASE_URL}/TransactionDetails`).then((res) => res.json());
+  },
+  setTransactions: (transactions) => {
+    return fetch(`${BASE_URL}/TransactionDetails`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(transactions),
+    });
+  },
 };

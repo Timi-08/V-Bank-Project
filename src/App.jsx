@@ -9,6 +9,8 @@ import { Profile } from "./Pages/Profile";
 import { Notifications } from "./Pages/Notifications";
 import { Deposit } from "./Pages/Deposit";
 import { Transfer } from "./Pages/Transfer";
+import { Password } from "./Pages/Password";
+import { Pin } from "./Pages/Pin";
 
 import { NotFound } from "./Pages/NotFound";
 import "./App.css";
@@ -87,6 +89,24 @@ function App() {
             <>
               <PrivateNavbar />
               <Transfer />
+            </>
+          }
+        />
+        <Route
+          path="/password"
+          element={
+            <>
+              <PrivateNavbar />
+              <Password />
+            </>
+          }
+        />
+        <Route
+          path="/pin"
+          element={
+            <>
+              <PrivateNavbar />
+              <Pin />
             </>
           }
         />

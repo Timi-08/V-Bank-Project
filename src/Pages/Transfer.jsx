@@ -14,7 +14,7 @@ export const Transfer = () => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     setUser(storedUser);
-    mockApi.getAllAccounts().then(setAccounts);
+    mockApi.getUsers().then(setAccounts);
   }, []);
 
   const onFinish = async (values) => {
@@ -22,14 +22,18 @@ export const Transfer = () => {
     try {
       const transferAmount = Number(values.amount);
       const recipientAccNum = String(values.recipientAccountNumber);
-
-      const sender = accounts.find(
-        (acc) => String(acc.userId) === String(user.id)
-      );
+      const pin = String(values.pin);
+      const sender = accounts.find((acc) => String(acc.id) === String(user.id));
       const recipient = accounts.find(
         (acc) => String(acc.accountNumber) === recipientAccNum
       );
+      const amount = transferAmount.toFixed(2);
+      const senderName = sender.accountName;
+      const receiverName = recipient.accountName;
 
+      const now = new Date();
+      const transactionDate = now.toLocaleDateString();
+      const transactionTime = now.toLocaleTimeString();
       if (!sender) {
         api.error({
           message: "Transfer Failed",
@@ -57,12 +61,19 @@ export const Transfer = () => {
       if (Number(sender.accountBalance) < transferAmount) {
         api.error({
           message: "Transfer Failed",
-          description: "Insufficient balance.",
+          description: "Insufficient funds.",
         });
         setIsLoading(false);
         return;
       }
-
+      if (String(sender.pin) !== pin) {
+        api.error({
+          message: "Transfer Failed",
+          description: "Incorrect pin.",
+        });
+        setIsLoading(false);
+        return;
+      }
       await mockApi.updateAccount({
         ...sender,
         accountBalance: Number(sender.accountBalance) - transferAmount,
@@ -73,11 +84,32 @@ export const Transfer = () => {
         accountBalance: Number(recipient.accountBalance) + transferAmount,
       });
 
+      await mockApi.createTransfer({
+        senderName,
+        receiverName: recipient.accountName,
+        amount,
+        transactionStatus: "Debit",
+        userId: sender.id,
+        transactionDate,
+        transactionTime,
+      });
+
+      await mockApi.createTransfer({
+        senderName,
+        receiverName: recipient.accountName,
+        amount,
+        transactionStatus: "Credit",
+        userId: recipient.id,
+        transactionDate,
+        transactionTime,
+      });
+
       api.success({
         message: "Transfer Successful",
         description: `₦${transferAmount} has been transferred.`,
       });
       form.resetFields();
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (error) {
       api.error({
         message: "Transfer Failed",
@@ -85,7 +117,6 @@ export const Transfer = () => {
       });
     } finally {
       setIsLoading(false);
-      setTimeout(() => navigate("/dashboard"), 1000);
     }
   };
   const onReset = () => {
@@ -95,7 +126,7 @@ export const Transfer = () => {
   return (
     <div className="Transfer">
       {contextHolder}
-      <h2>Transfer Funds</h2>
+      <h2>Transfer to</h2>
       <Form
         form={form}
         onFinish={onFinish}
@@ -123,6 +154,19 @@ export const Transfer = () => {
           ]}
         >
           <Input placeholder="Enter amount" />
+        </Form.Item>
+        <Form.Item
+          label="Pin"
+          name="pin"
+          rules={[
+            { required: true, message: "Please input your pin!" },
+            {
+              pattern: /^\d{4}$/,
+              message: "Please enter a valid 4-digit pin!",
+            },
+          ]}
+        >
+          <Input placeholder="Enter pin" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={isLoading}>
