@@ -1,5 +1,4 @@
 const BASE_URL = "https://68415c16d48516d1d35b3a73.mockapi.io/api/v1";
-
 export const mockApi = {
   createUser: (user) => {
     return fetch(`${BASE_URL}/UserDetails`, {

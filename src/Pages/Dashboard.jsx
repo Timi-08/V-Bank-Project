@@ -33,7 +33,7 @@ export const Dashboard = () => {
   if (isLoading) {
     return (
       <div className="loading-container">
-        <Loading />;
+        <Loading />
       </div>
     );
   }

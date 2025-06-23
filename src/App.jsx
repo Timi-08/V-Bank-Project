@@ -11,6 +11,7 @@ import { Deposit } from "./Pages/Deposit";
 import { Transfer } from "./Pages/Transfer";
 import { Password } from "./Pages/Password";
 import { Pin } from "./Pages/Pin";
+import { Darkmode } from "./components/Darkmode";
 
 import { NotFound } from "./Pages/NotFound";
 import "./App.css";
@@ -18,6 +19,7 @@ import "./App.css";
 function App() {
   return (
     <Router>
+      <Darkmode />
       <Routes>
         <Route
           path="/"

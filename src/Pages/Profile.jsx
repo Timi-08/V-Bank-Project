@@ -83,9 +83,8 @@ export const Profile = () => {
         </div>
         <Dropdown menu={{ items: pinPasswordItems }} trigger={["click"]}>
           <div className="link pinandpassword" style={{ cursor: "pointer" }}>
-            <Space>
-              <p style={{ margin: 0 }}>Pin and Password</p>
-            </Space>
+            <p style={{ margin: 0 }}>Pin and Password</p>
+            <CaretRightOutlined />
           </div>
         </Dropdown>
         <div className="link">
